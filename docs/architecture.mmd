@@ -1,0 +1,7 @@
+flowchart LR
+  UI[React + Vite + Recharts\nDashboard] --> API[Spring Boot 3 API\nValidation + OpenAPI]
+  API --> SSE[SSE event stream]
+  API --> WORKER[Virtual-thread worker\nfuture JMeter adapter]
+  WORKER --> TARGET[Demo service\ncontrolled failures]
+  API --> DB[(PostgreSQL + TimescaleDB\nrun_metrics hypertable)]
+  API --> AI[Structured analysis\nmodel adapter + fallback rules]

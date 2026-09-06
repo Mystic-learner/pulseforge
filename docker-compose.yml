@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_DB: pulseforge
+      POSTGRES_USER: pulseforge
+      POSTGRES_PASSWORD: pulseforge
+    ports: ["5432:5432"]
+    volumes: ["pulseforge_pg:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulseforge -d pulseforge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  api:
+    build: ./backend-java
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pulseforge
+      SPRING_DATASOURCE_USERNAME: pulseforge
+      SPRING_DATASOURCE_PASSWORD: pulseforge
+      DEMO_SERVICE_URL: http://demo-service:8081
+    ports: ["8080:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      demo-service: { condition: service_healthy }
+  demo-service:
+    build: ./demo-service
+    ports: ["8081:8081"]
+    environment:
+      DEMO_DB_LATENCY_MS: 80
+      DEMO_EXTERNAL_LATENCY_MS: 180
+    healthcheck:
+      test: ["CMD-SHELL", "bash -lc 'exec 3<>/dev/tcp/127.0.0.1/8081'"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+volumes:
+  pulseforge_pg:
