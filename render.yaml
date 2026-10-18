@@ -1,0 +1,36 @@
+services:
+  # 1. Demo target service — intentionally degraded HTTP endpoints
+  - type: web
+    name: pulseforge-demo
+    runtime: docker
+    dockerContext: ./demo-service
+    dockerfilePath: ./demo-service/Dockerfile
+    plan: free
+    healthCheckPath: /health
+
+  # 2. Spring Boot API — uses embedded H2 when no SPRING_DATASOURCE_URL is set
+  - type: web
+    name: pulseforge-api
+    runtime: docker
+    dockerContext: ./backend-java
+    dockerfilePath: ./backend-java/Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: DEMO_SERVICE_URL
+        sync: false                      # Render will prompt for this — enter the demo service URL after it deploys
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xmx256m                  # Keep Spring Boot inside Render's 512MB free limit
+
+  # 3. React frontend — static site, never spins down
+  - type: static
+    name: pulseforge-frontend
+    buildCommand: npm install -g pnpm && pnpm install && pnpm build
+    staticPublishPath: ./dist/public
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html          # SPA client-side routing
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false                        # Render will prompt for this — enter the API URL after it deploys
