@@ -26,7 +26,7 @@ services:
   - type: web
     runtime: static
     name: pulseforge-frontend
-    buildCommand: npm install -g pnpm && pnpm install && pnpm build
+    buildCommand: corepack enable && pnpm install && pnpm build
     staticPublishPath: ./dist/public
     routes:
       - type: rewrite
