@@ -23,7 +23,8 @@ services:
         value: -Xmx256m                  # Keep Spring Boot inside Render's 512MB free limit
 
   # 3. React frontend — static site, never spins down
-  - type: static
+  - type: web
+    runtime: static
     name: pulseforge-frontend
     buildCommand: npm install -g pnpm && pnpm install && pnpm build
     staticPublishPath: ./dist/public
