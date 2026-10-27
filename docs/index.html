@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PulseForge: 20-second launch</title>
+<style>
+:root{--bg:#f4f1ec;--fg:#1b1a17;--mut:#6b675e;--acc:#e26a3a;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121212;--fg:#f1eee8;--mut:#9a958a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121212;--fg:#f1eee8;--mut:#9a958a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px 14px}
+.wrap{width:100%;max-width:960px}
+.stage{container-type:inline-size;position:relative;width:100%;aspect-ratio:16/9;background:#0e1013;color:#f3efe8;border-radius:14px;overflow:hidden}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6cqw;opacity:0;transform:scale(.97);transition:opacity .45s,transform .45s}
+.scene.on{opacity:1;transform:none}
+h1,h2,p{margin:0}
+.big{font-size:6.2cqw;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.mid{font-size:3cqw;color:#b9b3a7;margin-top:2cqw}
+.acc{color:#ff8a56}
+.logo{font-size:10cqw;font-weight:900;letter-spacing:-.04em}
+.chips{display:flex;flex-wrap:wrap;gap:1.4cqw;justify-content:center;margin-top:3cqw;max-width:80cqw}
+.chip{font-size:2.5cqw;padding:1cqw 2.2cqw;border:1px solid #3a3d42;border-radius:99px;background:#181b20;opacity:0;transform:translateY(1.5cqw);transition:all .4s}
+.on .chip{opacity:1;transform:none}
+.on .chip:nth-child(2){transition-delay:.35s}.on .chip:nth-child(3){transition-delay:.7s}.on .chip:nth-child(4){transition-delay:1.05s}.on .chip:nth-child(5){transition-delay:1.4s}
+.chart{width:78cqw;height:26cqw}
+.stats{display:flex;gap:4cqw;margin-top:2cqw}
+.stat b{display:block;font-size:4cqw;font-variant-numeric:tabular-nums}
+.stat span{font-size:1.8cqw;color:#9a958a;text-transform:uppercase;letter-spacing:.08em}
+.note{font-size:1.5cqw;color:#7d796f;margin-top:1.6cqw}
+.gate{font-size:5cqw;font-weight:800;padding:1.6cqw 4cqw;border-radius:1.6cqw;border:2px solid #555;color:#999;min-width:30cqw;transition:all .3s}
+.gate.fail{border-color:#ff5a4d;color:#ff5a4d}.gate.pass{border-color:#4cd48a;color:#4cd48a}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:3cqw;background:#181b20;border:1px solid #3a3d42;padding:1.2cqw 2.4cqw;border-radius:1.2cqw;display:inline-block;margin-top:3cqw}
+.bar{position:absolute;left:0;bottom:0;height:.6cqw;background:#ff8a56;width:0}
+.ctl{display:flex;gap:10px;align-items:center;width:100%;max-width:960px}
+button{font:inherit;font-weight:600;padding:9px 18px;border-radius:10px;border:1px solid var(--mut);background:transparent;color:var(--fg);cursor:pointer}
+button:hover{border-color:var(--acc);color:var(--acc)}
+.cap{color:var(--mut);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage" id="stage">
+    <div class="scene"><h1 class="big">Your API works.<br><span class="acc">Until it doesn&rsquo;t.</span></h1></div>
+    <div class="scene"><div class="logo">Pulse<span class="acc">Forge</span></div><p class="mid">API reliability and performance testing, with receipts.</p></div>
+    <div class="scene">
+      <h2 class="big" style="font-size:4cqw">Watch latency move. <span class="acc">Live.</span></h2>
+      <svg class="chart" id="chart" viewBox="0 0 400 130" preserveAspectRatio="none"><line x1="0" y1="26" x2="400" y2="26" stroke="#ff5a4d" stroke-dasharray="4 4" stroke-width="1"/><polyline id="line" fill="none" stroke="#ff8a56" stroke-width="2.5" stroke-linejoin="round" points=""/></svg>
+      <div class="stats"><div class="stat"><b id="p95">0 ms</b><span>p95</span></div><div class="stat"><b id="p99">0 ms</b><span>p99</span></div><div class="stat"><b id="rps">0</b><span>req/s</span></div></div>
+      <p class="note">illustrative animation, not measured data</p>
+    </div>
+    <div class="scene">
+      <h2 class="big" style="font-size:4.4cqw">Real load. Real evidence.</h2>
+      <div class="chips"><span class="chip">Java 21 virtual threads</span><span class="chip">SSE live telemetry</span><span class="chip">OpenAPI import</span><span class="chip">SLO evaluation</span><span class="chip">Evidence-based analysis</span></div>
+    </div>
+    <div class="scene">
+      <div class="gate" id="gate">NO DATA</div>
+      <p class="mid" style="font-size:3.2cqw">CI gates <span class="acc">fail closed.</span><br>No observations, no pass.</p>
+    </div>
+    <div class="scene">
+      <div class="logo" style="font-size:7cqw">Pulse<span class="acc">Forge</span></div>
+      <code>docker compose up --build</code>
+      <p class="mid" style="font-size:2.4cqw">github.com/Mystic-learner/pulseforge</p>
+    </div>
+    <div class="bar" id="bar"></div>
+  </div>
+</div>
+<div class="ctl"><button id="replay">Replay</button><span class="cap">20 seconds &middot; silent &middot; made for PulseForge</span></div>
+<script>
+(function(){
+  var scenes=[].slice.call(document.querySelectorAll('.scene'));
+  var dur=[3,3,4,3.5,3.5,3];
+  var starts=[],acc=0;dur.forEach(function(d){starts.push(acc);acc+=d;});
+  var TOTAL=acc,line=document.getElementById('line'),bar=document.getElementById('bar');
+  var p95=document.getElementById('p95'),p99=document.getElementById('p99'),rps=document.getElementById('rps'),gate=document.getElementById('gate');
+  var pts=[];for(var i=0;i<60;i++){var x=i/59;var v=110+Math.sin(i*1.7)*9+Math.max(0,x-.35)*520*Math.min(1,(x-.35)*3);pts.push(v);}
+  var t0,raf,cur=-1;
+  function draw(local){
+    var n=Math.max(2,Math.floor(Math.min(1,local/3)*60));
+    var s=[];for(var i=0;i<n;i++){s.push((i/59*400).toFixed(1)+','+(128-pts[i]/520*118).toFixed(1));}
+    line.setAttribute('points',s.join(' '));
+    var last=pts[n-1];
+    p95.textContent=Math.round(last)+' ms';p99.textContent=Math.round(last*1.55)+' ms';rps.textContent=Math.round(420-(last-110)*.5);
+  }
+  function tick(now){
+    var t=(now-t0)/1000;
+    if(t>=TOTAL){bar.style.width='100%';return;}
+    var idx=0;for(var i=0;i<starts.length;i++){if(t>=starts[i])idx=i;}
+    if(idx!==cur){cur=idx;scenes.forEach(function(s,k){s.classList.toggle('on',k===idx);});}
+    var local=t-starts[idx];
+    if(idx===2)draw(local);
+    if(idx===4){gate.className='gate'+(local>2.4?' pass':local>1.2?' fail':'');gate.textContent=local>2.4?'PASS':local>1.2?'FAIL':'NO DATA';}
+    bar.style.width=(t/TOTAL*100)+'%';
+    raf=requestAnimationFrame(tick);
+  }
+  function play(){cancelAnimationFrame(raf);cur=-1;scenes.forEach(function(s){s.classList.remove('on');});t0=performance.now();raf=requestAnimationFrame(tick);}
+  document.getElementById('replay').addEventListener('click',play);
+  play();
+})();
+</script>
+</body>
+</html>
