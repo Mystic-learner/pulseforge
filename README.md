@@ -1,6 +1,24 @@
 # PulseForge
 
-PulseForge is an AI-assisted API reliability and performance testing workspace. It helps developers define controlled HTTP load tests, watch latency and throughput evolve in real time, compare runs, and turn measured signals into explainable recommendations.
+**API reliability and performance testing, with receipts.**
+Define a load test, watch latency and throughput move live, and get recommendations that cite real measurements, never invented ones.
+
+![Java 21](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot 3](https://img.shields.io/badge/Spring_Boot-3-6DB33F)
+![React](https://img.shields.io/badge/React-TypeScript-61DAFB)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-TimescaleDB_ready-336791)
+![Docker](https://img.shields.io/badge/Docker-compose-2496ED)
+
+[&#9654; Watch the 20-second launch](https://mystic-learner.github.io/pulseforge/)
+
+## Why PulseForge
+
+- **Real load, real numbers.** Java 21 virtual threads fire actual HTTP requests. Every p95/p99, throughput, and error-rate figure comes from captured timestamps and status codes.
+- **Live telemetry.** Latency and throughput stream to the React dashboard over SSE as the test runs.
+- **Fail-closed gates.** SLO checks and CI gates never pass without a completed run containing real observations.
+- **Honest AI.** Output is labelled a recommendation and only cites metrics the worker actually produced.
+- **Safe by default.** Explicit confirmation to start, HTTP(S) targets only, capped at 500 virtual users and 600 seconds.
+- **Try it on broken services.** The bundled demo service has intentionally degraded endpoints (N+1, slow external call, pool exhaustion) for PulseForge to find.
 
 ## Five-minute demo
 
